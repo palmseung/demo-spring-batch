@@ -20,7 +20,7 @@ spring:
       jdbc-url: jdbc:mysql://localhost:3306/batch
       username: root
       password: password
-      driver-class-name: com.mysql.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
   config:
     activate:
       on-profile: mysql
