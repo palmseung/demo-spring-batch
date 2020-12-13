@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:tcp://localhost/~/querydsl
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+  config:
+    activate:
+      on-profile: local
+---
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/batch
+      username: root
+      password: password
+      driver-class-name: com.mysql.jdbc.Driver
+  config:
+    activate:
+      on-profile: mysql
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      format_sql: true
+      ddl-auto: create
