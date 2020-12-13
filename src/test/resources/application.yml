@@ -7,6 +7,7 @@ spring:
 
 logging.level.org.springframework.batch: DEBUG
 
+
 ---
 spring:
   datasource:
@@ -33,6 +34,4 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       format_sql: true
-      ddl-auto: validate
-
-logging.level.org.springframework.batch: DEBUG
+      ddl-auto: create
