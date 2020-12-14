@@ -2,8 +2,10 @@ package com.example.demobatch.job;
 
 import com.example.demobatch.FirebaseClient;
 import com.google.api.core.ApiFuture;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class FindDocumentJobConfiguration {
+public class FindAndDeleteDocumentJobConfiguration {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
@@ -36,34 +38,43 @@ public class FindDocumentJobConfiguration {
   private final String ODST000005 = "ODST000005";
 
   @Bean
-  public Job findDocumentJob(){
-    return jobBuilderFactory.get("findDocumentJob")
-        .start(findDocumentStep())
+  public Job findAndDeleteDocumentJob(){
+    return jobBuilderFactory.get("findAndDeleteDocumentJob")
+        .start(findAndDeleteStep())
         .build();
   }
 
   @Bean
-  public Step findDocumentStep() {
-    return stepBuilderFactory.get("findDocumentStep")
+  public Step findAndDeleteStep() {
+    return stepBuilderFactory.get("findAndDeleteStep")
         .tasklet((contribution, chunkContext) -> {
           ApiFuture<QuerySnapshot> snapshots = firebaseClient.getFirestoreDB()
               .collection(COLLECTION_ALPHA).document(DOCUMENT_ORDER).collection(COLLECTION_STATUS)
               .get();
 
+          //find
           List<QueryDocumentSnapshot> documents = snapshots.get().getDocuments();
           List<QueryDocumentSnapshot> collect = documents.stream()
-              .filter(document -> ODST000005.equals(document.getData().get(DOC_STATUS)))
+              .filter(document -> ODST000013.equals(document.getData().get(DOC_STATUS)))
               .collect(Collectors.toList());
-          log.info(">>>>>>>>>>>>>>> count : {}", collect.size());
+          log.info(">>>>>>>>>>>>>>> count to find/delete : {}", collect.size());
 
-          for (QueryDocumentSnapshot queryDocumentSnapshot : collect) {
-            OrderDto orderDto = queryDocumentSnapshot.toObject(OrderDto.class);
+          for (QueryDocumentSnapshot document : collect) {
+            OrderDto orderDto = document.toObject(OrderDto.class);
             log.info(">>>>>>>>>>>>>>> id : {}", orderDto.getOrderId());
             log.info(">>>>>>>>>>>>>>> status : {}", orderDto.getStatus());
+
+
+            //delete
+            ApiFuture<WriteResult> delete = document.getReference().delete();
+            Timestamp deleteTime = delete.get().getUpdateTime();
+            log.info(">>>>>>>>>>>>>>> Timestamp to delete : {}", deleteTime);
           }
 
           return RepeatStatus.FINISHED;
         })
         .build();
   }
+
+
 }
