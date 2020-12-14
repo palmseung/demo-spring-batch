@@ -1,4 +1,4 @@
-package com.example.demobatch;
+package com.example.demobatch.firestore;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;

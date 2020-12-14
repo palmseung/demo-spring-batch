@@ -1,13 +1,14 @@
-package com.example.demobatch.job;
+package com.example.demobatch.firestore;
 
-import com.example.demobatch.FirebaseClient;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
+import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -31,7 +32,7 @@ public class FindAndDeleteDocumentJobConfiguration {
   private final String DOCUMENT_ORDER = "order";
   private final String COLLECTION_STATUS = "status";
 
-  private final String DOC_ORDER_ID = "orderID";
+  private final String DOC_ORDER_ID = "orderId";
   private final String DOC_STATUS = "status";
   private final String ODST000003 = "ODST000003";
   private final String ODST000013 = "ODST000013";
