@@ -53,7 +53,7 @@ public class FindAndDeleteDocumentJobConfiguration {
               .collection(COLLECTION_ALPHA).document(DOCUMENT_ORDER).collection(COLLECTION_STATUS)
               .get();
 
-          //find
+          //find by status
           List<QueryDocumentSnapshot> documents = snapshots.get().getDocuments();
           List<QueryDocumentSnapshot> collect = documents.stream()
               .filter(document -> ODST000013.equals(document.getData().get(DOC_STATUS)))
@@ -76,6 +76,4 @@ public class FindAndDeleteDocumentJobConfiguration {
         })
         .build();
   }
-
-
 }
